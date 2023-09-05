@@ -23,6 +23,16 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.methods.isValidPassword = async function (password) {
+  try {
+    // Check/Compares password
+    return await bcrypt.compare(password, this.password);
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
+
 userSchema.pre("save", function (next) {
   if (this.isModified("password") || this.isNew) {
     try {
