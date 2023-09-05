@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.pre("save", function (next) {
+userSchema.pre("save", function (next) {
   if (this.isModified("password") || this.isNew) {
     try {
       // Hash Password
@@ -39,6 +39,6 @@ UserSchema.pre("save", function (next) {
   }
 });
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
