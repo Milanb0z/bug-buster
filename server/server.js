@@ -9,10 +9,11 @@ const app = express();
 
 app.use(cors());
 
+//Router
+app.use("/api/user", require("./router/userRouter"));
+
 app.get("/", (req, res) => {
   res.send("Online");
 });
 
-app.listen(PORT, () =>
-  console.log(`Server running at http://localhost:${PORT}/`)
-);
+app.listen(PORT, () => console.log(`SERVER_ONLINE_PORT_${PORT}/`));
