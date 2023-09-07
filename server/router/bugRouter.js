@@ -70,4 +70,54 @@ router.patch("/:bugId", auth, async (req, res) => {
   }
 });
 
+// Toggle State Bug
+
+router.patch("/:bugId/open", auth, async (req, res) => {
+  try {
+    const bug = await Bug.findOneAndUpdate(
+      { bugId: req.params.bugId, isOpen: !state },
+      {
+        isOpen: true,
+      },
+      { new: true, runValidators: true }
+    );
+    if (!bug) {
+      return res
+        .status(404)
+        .send({ error: `Bug#${req.params.bugId} Not Found` });
+    }
+
+    res.sebd({ data: bug });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      error: "Something went wrong while getting bugs",
+    });
+  }
+});
+
+router.patch("/:bugId/close", auth, async (req, res) => {
+  try {
+    const bug = await Bug.findOneAndUpdate(
+      { bugId: req.params.bugId, isOpen: !state },
+      {
+        isOpen: false,
+      },
+      { new: true, runValidators: true }
+    );
+    if (!bug) {
+      return res
+        .status(404)
+        .send({ error: `Bug#${req.params.bugId} Not Found` });
+    }
+
+    res.sebd({ data: bug });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      error: "Something went wrong while getting bugs",
+    });
+  }
+});
+
 module.exports = router;
