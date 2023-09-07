@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const sgMail = require("@sendgrid/mail");
 
 require("dotenv").config();
 require("./config/db");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const PORT = process.env.PORT || 5000;
 
