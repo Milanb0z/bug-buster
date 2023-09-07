@@ -111,7 +111,7 @@ router.patch("/:bugId/close", auth, async (req, res) => {
         .send({ error: `Bug#${req.params.bugId} Not Found` });
     }
 
-    res.sebd({ data: bug });
+    res.send({ data: bug });
   } catch (error) {
     console.log(error);
     res.status(500).send({
