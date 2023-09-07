@@ -136,6 +136,25 @@ router.get("/verify-email", async (req, res) => {
   }
 });
 
+//Get Profile By Username
+router.get("/:username", async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username }).select(
+      "-password"
+    );
+    if (!user) {
+      return res.status(404).send({
+        error: `User not found with the username ${req.params.username}`,
+      });
+    }
+
+    res.send({ data: user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error });
+  }
+});
+
 // Logout
 router.get("/logout", auth, (req, res) => {
   return res
