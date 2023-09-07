@@ -102,6 +102,40 @@ router.get("/profile", auth, (req, res) => {
   }
 });
 
+//Profile Verification
+router.get("/verify-email", async (req, res) => {
+  try {
+    const token = await Token.findOne({ token: req.query.token });
+    if (!token)
+      return res.notFound({ error: "Unable to find verification token" });
+
+    // find user with matching token
+    const user = await User.findOne({ _id: token._userId });
+    if (!user)
+      return res.status(404).send({
+        error: "Unable to find matching user & token for verification",
+      });
+    if (user.isVerified)
+      return res.status(400).send({ error: "User is already verified" });
+
+    user.isVerified = true;
+
+    const savedUser = await user.save();
+    if (!savedUser) {
+      return res.stauts(500).send({ error: "Error while verifying user" });
+    }
+
+    res.send({
+      data: savedUser,
+      message: "Email address successfully verified.",
+    });
+    //res.redirect('/');
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error });
+  }
+});
+
 // Logout
 router.get("/logout", auth, (req, res) => {
   return res
