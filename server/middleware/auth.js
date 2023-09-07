@@ -3,12 +3,14 @@ const jwt = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
   let token;
-  token = req.cookies.jwt;
+  token = req.cookies["x-auth-token"];
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.user = await User.findById(decoded.userId).select("-password");
+      console.log(decoded);
+
+      req.user = await User.findById(decoded.id).select("-password");
 
       next();
     } catch (error) {
