@@ -1,6 +1,8 @@
 const router = require("express").Router();
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/userModel");
+const auth = require("../middleware/auth");
 
 //Create User
 router.post("/signup", async (req, res) => {
@@ -15,7 +17,15 @@ router.post("/signup", async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    res.send(savedUser);
+    const token = jwt.sign(
+      {
+        id: savedUser._id,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    res.send({ token });
   } catch (error) {
     console.log(error);
     res.status(500).send({ error });
@@ -41,6 +51,13 @@ router.post("/login", async (req, res) => {
     console.log(error);
     res.status(500).send({ error });
   }
+});
+
+// Logout
+router.get("/logout", auth, (req, res) => {
+  return res
+    .clearCookie("x-auth-token")
+    .send({ message: "Successfully logged out 😏 🍀" });
 });
 
 module.exports = router;
