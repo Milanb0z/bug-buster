@@ -1,9 +1,10 @@
-const User = require("../models/userModel");
+const { User } = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
   let token;
   token = req.cookies["x-auth-token"];
+  console.log(token);
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);

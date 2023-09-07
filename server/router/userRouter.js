@@ -2,7 +2,7 @@ const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 
-const User = require("../models/userModel");
+const { User } = require("../models/userModel");
 const auth = require("../middleware/auth");
 
 //Create User

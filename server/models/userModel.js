@@ -1,6 +1,16 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
+const UserInfoSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 6,
+    maxlength: 100,
+  },
+});
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -55,4 +65,4 @@ userSchema.pre("save", function (next) {
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+module.exports = { User, UserInfoSchema };
