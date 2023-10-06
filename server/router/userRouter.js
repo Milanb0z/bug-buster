@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const { User } = require("../models/userModel");
 const auth = require("../middleware/auth");
+const { Bug } = require("../models/bugModel");
 
 //Create User
 router.post("/signup", async (req, res) => {
@@ -136,7 +137,28 @@ router.get("/verify-email", async (req, res) => {
   }
 });
 
-//Get Profile By Username
+//Get User Bugs
+router.get("/:username/bugs", async (req, res) => {
+  const { username } = req.params;
+  try {
+    const user = await User.findOne({ username }).select("-password");
+
+    if (!user) {
+      return res.status(404).send({
+        error: `No User Found`,
+      });
+    }
+
+    const bugs = await Bug.find({ "author.username": username });
+
+    res.send({ data: { users, bugs } });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error });
+  }
+});
+
+//Get Users
 router.get("/", async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -153,7 +175,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-//Get Profile By Username
+//Get User By Username
 router.get("/:username", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username }).select(
