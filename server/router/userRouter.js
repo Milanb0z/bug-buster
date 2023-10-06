@@ -137,6 +137,23 @@ router.get("/verify-email", async (req, res) => {
 });
 
 //Get Profile By Username
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    if (!users) {
+      return res.status(404).send({
+        error: `No Users Found`,
+      });
+    }
+
+    res.send({ data: users });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error });
+  }
+});
+
+//Get Profile By Username
 router.get("/:username", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username }).select(
@@ -149,6 +166,17 @@ router.get("/:username", async (req, res) => {
     }
 
     res.send({ data: user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error });
+  }
+});
+
+//Delete
+router.delete("/", auth, async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.user._id);
+    res.send({ data: deletedUser });
   } catch (error) {
     console.log(error);
     res.status(500).send({ error });
