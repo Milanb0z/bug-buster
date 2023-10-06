@@ -120,4 +120,29 @@ router.patch("/:bugId/close", auth, async (req, res) => {
   }
 });
 
+router.patch("/:bugId/labels", auth, async (req, res) => {
+  const { labels } = req.body;
+  try {
+    const bug = await Bug.findByIdAndUpdate(
+      req.params.bugId,
+      {
+        labels,
+      },
+      { new: true, runValidators: true }
+    );
+    if (!bug) {
+      return res
+        .status(404)
+        .send({ error: `Bug#${req.params.bugId} Not Found` });
+    }
+
+    res.send({ data: bug });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      error: "Something went wrong while setting bug labels",
+    });
+  }
+});
+
 module.exports = router;
