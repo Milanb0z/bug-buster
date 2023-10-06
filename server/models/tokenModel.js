@@ -24,4 +24,4 @@ TokenSchema.index(
 );
 const Token = mongoose.model("Token", TokenSchema);
 
-module.exports = Token;
+module.exports = { Token };

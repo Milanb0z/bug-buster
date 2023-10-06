@@ -2,9 +2,10 @@ const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 
-const { User } = require("../models/userModel");
 const auth = require("../middleware/auth");
+const { User } = require("../models/userModel");
 const { Bug } = require("../models/bugModel");
+const { Token } = require("../models/tokenModel");
 
 //Create User
 router.post("/signup", async (req, res) => {
@@ -87,6 +88,23 @@ router.post("/login", async (req, res) => {
         secure: process.env.NODE_ENV === "production",
       })
       .send(foundUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error });
+  }
+});
+
+// Update Bio
+router.patch("/me/bio", auth, async (req, res) => {
+  const { bio } = req.body;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { bio },
+      { new: true, runValidators: true }
+    );
+
+    res.send({ data: updatedUser });
   } catch (error) {
     console.log(error);
     res.status(500).send({ error });
